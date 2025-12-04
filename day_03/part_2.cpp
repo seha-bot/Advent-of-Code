@@ -22,15 +22,11 @@ int main() {
     }
     std::string max(12, '0');
     for (char c : bank) {
-      auto it = stdr::adjacent_find(max, stdr::less{});
-      if (it != max.end()) {
-        std::copy(it + 1, max.end(), it);
-        max.back() = c;
-      } else if (c > max.back()) {
-        if (max.back() > max[max.size() - 2]) {
-          max[max.size() - 2] = max.back();
-        }
-        max.back() = c;
+      max.push_back(c);
+      if (auto it = stdr::adjacent_find(max, stdr::less{}); it != max.end()) {
+        max.erase(it);
+      } else {
+        max.pop_back();
       }
     }
 
