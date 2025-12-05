@@ -5,8 +5,6 @@
 #include <utility>
 #include <vector>
 
-namespace stdr = std::ranges;
-
 int main() {
   std::ifstream in("input.txt");
   if (!in) {
@@ -16,7 +14,7 @@ int main() {
 
   std::vector<std::pair<long, long>> ranges;
 
-  while (true) {
+  do {
     long a, b;
     in >> a;
     in.ignore();
@@ -24,24 +22,15 @@ int main() {
     in.ignore();
 
     ranges.emplace_back(a, b);
+  } while (in.peek() != '\n');
 
-    if (in.peek() == '\n') {
-      break;
-    }
-  }
+  std::ranges::sort(ranges);
 
-  stdr::sort(ranges);
-
-  long cnt = 0, prev_max = 0;
+  long cnt = 0, prev_b = 0;
   for (auto &[a, b] : ranges) {
-    if (prev_max >= a) {
-      long new_max = std::max(prev_max, b);
-      cnt += new_max - prev_max;
-      prev_max = new_max;
-    } else {
-      cnt += b - a + 1;
-      prev_max = b;
-    }
+    long new_b = std::max(prev_b, b);
+    cnt += new_b - std::max(prev_b, a - 1);
+    prev_b = new_b;
   }
 
   std::cout << cnt << '\n';
