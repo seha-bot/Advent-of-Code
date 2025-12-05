@@ -32,21 +32,17 @@ int main() {
 
   stdr::sort(ranges);
 
-  std::size_t offset = 1;
-  for (std::size_t i = 0; i + offset < ranges.size();) {
-    if (ranges[i].second + 1 >= ranges[i + offset].first) {
-      ranges[i].second = std::max(ranges[i].second, ranges[i + offset].second);
-      ranges[i + offset] = {1, 0};
-      ++offset;
+  long cnt = 0, prev_max = 0;
+  for (auto &[a, b] : ranges) {
+    if (prev_max >= a) {
+      long new_max = std::max(prev_max, b);
+      cnt += new_max - prev_max;
+      prev_max = new_max;
     } else {
-      i += offset;
-      offset = 1;
+      cnt += b - a + 1;
+      prev_max = b;
     }
   }
 
-  long cnt = 0;
-  for (auto [a, b] : ranges) {
-    cnt += b - a + 1;
-  }
   std::cout << cnt << '\n';
 }
